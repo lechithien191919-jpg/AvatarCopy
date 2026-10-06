@@ -1,11 +1,17 @@
--- File: main.lua (Link Raw này dùng để loadstring chính)
-local BaseURL = "https://github.com/lechithien191919-jpg/AvatarCopy" -- Ví dụ: https://raw.githubusercontent.com/TênTàiKhoản/TênRepo/main/
+local BaseURL = "https://raw.githubusercontent.com/lechithien191919-jpg/AvatarCopy/main/"
 
--- Tải giao diện và logic từ các file riêng biệt
-local UI = loadstring(game:HttpGet(BaseURL .. "ui.lua", true))()
-local Copier = loadstring(game:HttpGet(BaseURL .. "copier.lua", true))()
-
--- Gắn sự kiện khi bấm nút Copy
-UI.CopyBtn.MouseButton1Click:Connect(function()
-    Copier.ApplyAvatar(UI.TextBox.Text)
+local successUI, UI = pcall(function()
+    return loadstring(game:HttpGet(BaseURL .. "ui.lua", true))()
 end)
+
+local successCopier, Copier = pcall(function()
+    return loadstring(game:HttpGet(BaseURL .. "copier.lua", true))()
+end)
+
+if successUI and successCopier and UI and Copier then
+    UI.CopyBtn.MouseButton1Click:Connect(function()
+        Copier.Apply(UI.TextBox.Text)
+    end)
+else
+    warn("AvatarCopy: Lỗi tải các module từ GitHub!")
+end
