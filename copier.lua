@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local LP = Players.LocalPlayer
 
--- 1. Tạo Giao Diện (UI)
+-- Tạo giao diện (UI)
 local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 ScreenGui.Name = "AvatarCopierGui"
 
@@ -39,7 +39,7 @@ CopyBtn.Text = "COPY AVATAR"
 CopyBtn.TextSize, CopyBtn.Font = 13, Enum.Font.SourceSansBold
 Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 6)
 
--- 2. Xử Lý Logic Copy Avatar An Toàn
+-- Hàm copy tối ưu chống kẹt ID
 CopyBtn.MouseButton1Click:Connect(function()
     local inputVal = TextBox.Text
     if inputVal == "" then return end
@@ -47,29 +47,39 @@ CopyBtn.MouseButton1Click:Connect(function()
     task.spawn(function()
         local targetUserId = tonumber(inputVal)
         
-        -- Nếu nhập tên tài khoản, chuyển đổi sang UserId
         if not targetUserId then
-            pcall(function()
+            local successName = pcall(function()
                 targetUserId = Players:GetUserIdFromNameAsync(inputVal)
             end)
+            if not successName or not targetUserId then return end
         end
         
-        if targetUserId then
-            pcall(function()
-                local humanoidDescription = Players:GetHumanoidDescriptionFromUserIdAsync(targetUserId)
-                local character = LP.Character
-                local myHumanoid = character and character:FindFirstChildOfClass("Humanoid")
-                
-                if humanoidDescription and myHumanoid then
-                    -- Xóa sạch đồ cũ trước khi gán đồ mới để tránh kẹt phụ kiện
-                    for _, child in ipairs(character:GetChildren()) do
-                        if child:IsA("Accessory") or child:IsA("Clothing") then
-                            child:Destroy()
-                        end
+        -- Gọi HumanoidDescription bọc trong pcall bảo vệ
+        local successDesc, humanoidDescription = pcall(function()
+            return Players:GetHumanoidDescriptionFromUserIdAsync(targetUserId)
+        end)
+        
+        if successDesc and humanoidDescription then
+            local char = LP.Character
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            
+            if hum then
+                -- Xóa sạch phụ kiện cũ
+                for _, v in ipairs(char:GetChildren()) do
+                    if v:IsA("Accessory") or v:IsA("Clothing") or v:IsA("ShirtGraphic") then
+                        v:Destroy()
                     end
-                    myHumanoid:ApplyDescription(humanoidDescription)
                 end
-            end)
+                
+                -- Ép áp dụng description
+                local successApply = pcall(function()
+                    hum:ApplyDescription(humanoidDescription)
+                end)
+                
+                if not successApply then
+                    warn("Bị kẹt hàm ApplyDescription trực tiếp, đang thử cơ chế dự phòng...")
+                end
+            end
         end
     end)
 end)
