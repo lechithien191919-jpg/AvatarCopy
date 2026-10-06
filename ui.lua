@@ -1,4 +1,3 @@
--- File: ui.lua
 local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 ScreenGui.Name = "AvatarCopierGui"
 
@@ -13,9 +12,9 @@ Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
 local Title = Instance.new("TextLabel", MainFrame)
 Title.Size = UDim2.new(1, 0, 0.25, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "MODULAR AVATAR COPIER"
+Title.Text = "AVATAR COPY"
 Title.TextColor3 = Color3.fromRGB(255, 170, 0)
-Title.TextSize, Title.Font = 13, Enum.Font.SourceSansBold
+Title.TextSize, Title.Font = 14, Enum.Font.SourceSansBold
 
 local TextBox = Instance.new("TextBox", MainFrame)
 TextBox.Size = UDim2.new(0.85, 0, 0.28, 0)
@@ -36,7 +35,6 @@ CopyBtn.Text = "COPY AVATAR"
 CopyBtn.TextSize, CopyBtn.Font = 13, Enum.Font.SourceSansBold
 Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 6)
 
--- Trả về các thành phần để file chính kết nối
 return {
     TextBox = TextBox,
     CopyBtn = CopyBtn
