@@ -1,5 +1,5 @@
 -- File: main.lua (Link Raw này dùng để loadstring chính)
-local BaseURL = "https://github.com/lechithien191919-jpg/AvatarCopy/tree/main" -- Ví dụ: https://raw.githubusercontent.com/TênTàiKhoản/TênRepo/main/
+local BaseURL = "https://github.com/lechithien191919-jpg/AvatarCopy" -- Ví dụ: https://raw.githubusercontent.com/TênTàiKhoản/TênRepo/main/
 
 -- Tải giao diện và logic từ các file riêng biệt
 local UI = loadstring(game:HttpGet(BaseURL .. "ui.lua", true))()
